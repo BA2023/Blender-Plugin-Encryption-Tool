@@ -1,0 +1,29 @@
+{
+  "versions": {
+    "3.10": {
+      "tag": "cp310",
+      "python": "python_envs/py310/python.exe",
+      "label": "Python 3.10"
+    },
+    "3.11": {
+      "tag": "cp311",
+      "python": "python_envs/py311/python.exe",
+      "label": "Python 3.11"
+    },
+    "3.12": {
+      "tag": "cp312",
+      "python": "python_envs/py312/python.exe",
+      "label": "Python 3.12"
+    },
+    "3.13": {
+      "tag": "cp313",
+      "python": "python_envs/py313/python.exe",
+      "label": "Python 3.13"
+    },
+    "3.14": {
+      "tag": "cp314",
+      "python": "python_envs/py314/python.exe",
+      "label": "Python 3.14"
+    }
+  }
+}
