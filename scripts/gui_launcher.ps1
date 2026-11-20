@@ -11,9 +11,15 @@ public class ConsoleHelper {
     public static extern IntPtr GetConsoleWindow();
     [DllImport("user32.dll")]
     public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+    [DllImport("shell32.dll", CharSet = CharSet.Unicode, ExactSpelling = true)]
+    public static extern int SetCurrentProcessExplicitAppUserModelID(string appId);
 }
 '@
 Add-Type -TypeDefinition $code
+
+# Give the tool its own taskbar group so Windows uses the form icon.
+[void][ConsoleHelper]::SetCurrentProcessExplicitAppUserModelID("GWX.BlenderPluginEncryptionTool")
 [ConsoleHelper]::ShowWindow([ConsoleHelper]::GetConsoleWindow(), 0) | Out-Null
 
 Add-Type -AssemblyName System.Windows.Forms
@@ -29,7 +35,7 @@ $BackendScript = Join-Path $RootDir "scripts\builder_backend.py"
 $OutputDir = Join-Path $RootDir "output"
 $FormIconPath = Join-Path $RootDir "assets\blender.ico"
 $CompilerRoot = Join-Path $RootDir "compiler"
-$ToolVersion = "v26.6.24"
+$ToolVersion = "v26.6.25"
 
 if (-not (Test-Path $BuilderPython)) {
     [System.Windows.Forms.MessageBox]::Show("未找到内部运行环境：$BuilderPython", "启动失败")
@@ -109,6 +115,37 @@ $AuthorLabel.AutoSize = $true
 $AuthorLabel.Font = New-Object System.Drawing.Font("Microsoft YaHei UI", 11, [System.Drawing.FontStyle]::Italic)
 $AuthorLabel.ForeColor = [System.Drawing.Color]::FromArgb(160, 110, 80)
 $Form.Controls.Add($AuthorLabel)
+
+$RepositoryName = "BA2023/Blender-Plugin-Encryption-Tool"
+$RepositoryUrl = "https://github.com/$RepositoryName"
+
+$RepositoryLink = New-Object System.Windows.Forms.LinkLabel
+$RepositoryLink.Text = "GitHub 仓库"
+$RepositoryLink.AutoSize = $true
+$RepositoryLink.Font = $Form.Font
+$RepositoryLink.LinkColor = $AuthorLabel.ForeColor
+$RepositoryLink.ActiveLinkColor = $AuthorLabel.ForeColor
+$RepositoryLink.LinkBehavior = [System.Windows.Forms.LinkBehavior]::AlwaysUnderline
+$RepositoryLink.TabStop = $true
+$RepositoryLink.AccessibleDescription = "$RepositoryName，$RepositoryUrl"
+$RepositoryLink.Location = New-Object System.Drawing.Point((870 - $RepositoryLink.PreferredWidth), 39)
+$RepositoryLink.Links.Clear()
+[void]$RepositoryLink.Links.Add(0, $RepositoryLink.Text.Length, $RepositoryUrl)
+$RepositoryLink.Add_LinkClicked({
+    param($Sender, $EventArgs)
+    if ($EventArgs.Button -ne [System.Windows.Forms.MouseButtons]::Right) {
+        Start-Process -FilePath ([string]$EventArgs.Link.LinkData)
+    }
+})
+$Form.Controls.Add($RepositoryLink)
+
+$RepositoryToolTip = New-Object System.Windows.Forms.ToolTip
+$RepositoryToolTip.SetToolTip($RepositoryLink, "$RepositoryUrl`r`n右键可复制仓库地址")
+
+$RepositoryMenu = New-Object System.Windows.Forms.ContextMenuStrip
+$CopyRepositoryUrl = $RepositoryMenu.Items.Add("复制仓库地址")
+$CopyRepositoryUrl.Add_Click({ Set-Clipboard -Value $RepositoryUrl })
+$RepositoryLink.ContextMenuStrip = $RepositoryMenu
 
 # Card 1: File Input (White Panel)
 $Card1Title = New-Object System.Windows.Forms.Label

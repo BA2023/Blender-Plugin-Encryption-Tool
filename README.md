@@ -1,12 +1,12 @@
 # Blender 插件加密工具
 
-当前版本：**v26.6.24**
+当前版本：**v26.6.25**
 
 Windows 桌面工具：将 Blender 插件的 Python 脚本编译为 `.pyd` 核心，生成包含壳层 `__init__.py` 和核心模块的插件 ZIP。
 
 ## 下载与运行
 
-1. 在此仓库的 **Releases** 中下载 `Blender-Plugin-Encryption-Tool-v26.6.24-Windows-x64.zip` 完整便携包。
+1. 在此仓库的 **Releases** 中下载 `Blender-Plugin-Encryption-Tool-v26.6.25-Windows-x64.zip` 完整便携包。
 2. 将压缩包完整解压到本机可写目录，建议使用简短的英文路径，例如 `D:\BlenderEncryptTool`。
 3. 双击 `Start Tool.bat` 启动，也可以把一个 `.py` 文件拖到该 BAT 上。
 4. 选择源脚本、目标 Python 版本和输出目录，点击“开始加密”。
